@@ -129,4 +129,12 @@ class GameViewController: UIViewController, GameViewProtocol {
             rightStackView.addArrangedSubview(card)
         }
     }
+    
+    func showWinScreen(stats: GameStats) {
+        let winVC = WinViewController(stats: stats) { [weak self] in
+            self?.presenter.startNewGame()
+        }
+        winVC.modalPresentationStyle = .overFullScreen
+        self.present(winVC, animated: true)
+    }
 }

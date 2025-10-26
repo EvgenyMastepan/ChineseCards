@@ -18,6 +18,16 @@ class GameViewController: UIViewController, GameViewProtocol {
     
     private lazy var leftStackView = CustomStackView()
     private lazy var rightStackView = CustomStackView()
+    private lazy var settingsButton: UIButton = {
+        let button = UIButton()
+        button.setImage(UIImage(systemName: "gear"), for: .normal)
+        button.tintColor = .white
+        button.backgroundColor = .systemGray
+        button.layer.cornerRadius = 25
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.addTarget(self, action: #selector(settingsTapped), for: .touchUpInside)
+        return button
+    }()
     
     
     override func viewDidLoad() {
@@ -31,6 +41,7 @@ class GameViewController: UIViewController, GameViewProtocol {
         
         view.addSubview(leftStackView)
         view.addSubview(rightStackView)
+        view.addSubview(settingsButton)
         
         NSLayoutConstraint.activate([
             leftStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
@@ -41,7 +52,12 @@ class GameViewController: UIViewController, GameViewProtocol {
             rightStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             rightStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
             rightStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
-            rightStackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.43)
+            rightStackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.43),
+            
+            settingsButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
+            settingsButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            settingsButton.widthAnchor.constraint(equalToConstant: 50),
+            settingsButton.heightAnchor.constraint(equalToConstant: 50)
         ])
     }
     
@@ -105,9 +121,14 @@ class GameViewController: UIViewController, GameViewProtocol {
         leftStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         rightStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
+        let showPinyin = UserDefaults.standard.bool(forKey: "showPinyin")
+        
         for word in leftWords {
             let card = CustomCardView()
+            card.wordData = word  // ← ПЕРЕДАЁМ ВСЁ СЛОВО
+            card.showPinyin = UserDefaults.standard.bool(forKey: "showPinyin")
             card.text = word.character
+            card.showPinyin = showPinyin
             leftCards[word.id] = card  // сохраняем карточку
             
             card.onTap = { [weak self] in
@@ -136,5 +157,20 @@ class GameViewController: UIViewController, GameViewProtocol {
         }
         winVC.modalPresentationStyle = .overFullScreen
         self.present(winVC, animated: true)
+    }
+    
+    @objc private func settingsTapped() {
+        let settingsVC = SettingsViewController { [weak self] in
+            self?.refreshPinyinDisplay()
+        }
+        settingsVC.modalPresentationStyle = .overFullScreen
+        present(settingsVC, animated: true)
+    }
+    
+    private func refreshPinyinDisplay() {
+        let showPinyin = UserDefaults.standard.bool(forKey: "showPinyin")
+        
+        // Обновляем все карточки с иероглифами
+        presenter.startGame()
     }
 }

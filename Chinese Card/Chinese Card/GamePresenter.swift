@@ -65,6 +65,7 @@ class GamePresenter: GamePresenterProtocol {
                 WordData(
                     id: word.id ?? UUID(),
                     character: word.character ?? "",
+                    pinyin: word.pinyin ?? "",
                     translation: word.translationEn ?? ""
                 )
             }

@@ -11,11 +11,34 @@ import UIKit
 class CustomCardView: UIView {
     var onTap: (() -> Void)?
     
+    var showPinyin: Bool = false {
+        didSet {
+            updateDisplay()
+        }
+    }
+    
+    var wordData: WordData? {
+        didSet {
+            updateDisplay()
+        }
+    }
+    
     private let label: UILabel = {
         $0.textColor = .white
         $0.textAlignment = .center
+        $0.adjustsFontSizeToFitWidth = true
+        $0.minimumScaleFactor = 0.5
+        $0.lineBreakMode = .byWordWrapping
         $0.font = UIFont.systemFont(ofSize: 24, weight: .medium)
         $0.numberOfLines = 0
+        $0.translatesAutoresizingMaskIntoConstraints = false
+        return $0
+    }(UILabel())
+    
+    private let pinyinLabel: UILabel = {
+        $0.textColor = .systemGray
+        $0.textAlignment = .center
+        $0.font = UIFont.systemFont(ofSize: 12, weight: .regular)
         $0.translatesAutoresizingMaskIntoConstraints = false
         return $0
     }(UILabel())
@@ -63,6 +86,14 @@ class CustomCardView: UIView {
                 self.transform = .identity
             }
         }
+    }
+    
+    private func updateDisplay() {
+        guard let wordData = wordData else { return }
+        
+        label.text = wordData.character
+        pinyinLabel.text = showPinyin ? wordData.pinyin : ""
+        pinyinLabel.isHidden = !showPinyin
     }
     
     @objc private func handleTap() {

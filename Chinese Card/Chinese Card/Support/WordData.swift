@@ -11,5 +11,11 @@ struct WordData {
     let id: UUID
     let character: String
     let pinyin: String
-    let translation: String
+    let translationRu: String
+    let translationEn: String
+    
+    // Вычисляемое свойство для текущего перевода
+    var translation: String {
+        UserDefaults.standard.bool(forKey: "useEnglish") ? translationEn : translationRu
+    }
 }

@@ -38,6 +38,7 @@ class SettingsViewController: UIViewController {
         titleLabel.font = .systemFont(ofSize: 24, weight: .bold)
         titleLabel.textAlignment = .center
         
+        // Пиньинь
         let pinyinSwitch = UISwitch()
         pinyinSwitch.isOn = UserDefaults.standard.bool(forKey: "showPinyin")
         pinyinSwitch.addTarget(self, action: #selector(pinyinChanged), for: .valueChanged)
@@ -51,6 +52,20 @@ class SettingsViewController: UIViewController {
         pinyinStack.axis = .horizontal
         pinyinStack.distribution = .equalSpacing
         
+        // Язык перевода
+        let languageSegmented = UISegmentedControl(items: ["Русский", "English"])
+        languageSegmented.selectedSegmentIndex = UserDefaults.standard.bool(forKey: "useEnglish") ? 1 : 0
+        languageSegmented.addTarget(self, action: #selector(languageChanged), for: .valueChanged)
+        
+        let languageLabel = UILabel()
+        languageLabel.text = "Язык перевода"
+        languageLabel.textColor = .white
+        languageLabel.font = .systemFont(ofSize: 18, weight: .medium)
+        
+        let languageStack = UIStackView(arrangedSubviews: [languageLabel, languageSegmented])
+        languageStack.axis = .vertical
+        languageStack.spacing = 10
+        
         let closeButton = UIButton()
         closeButton.setTitle("Закрыть", for: .normal)
         closeButton.backgroundColor = .systemBlue
@@ -58,7 +73,7 @@ class SettingsViewController: UIViewController {
         closeButton.titleLabel?.font = .systemFont(ofSize: 18, weight: .bold)
         closeButton.addTarget(self, action: #selector(closeTapped), for: .touchUpInside)
         
-        let stack = UIStackView(arrangedSubviews: [titleLabel, pinyinStack, closeButton])
+        let stack = UIStackView(arrangedSubviews: [titleLabel, pinyinStack, languageStack, closeButton])
         stack.axis = .vertical
         stack.spacing = 30
         stack.alignment = .fill
@@ -83,6 +98,11 @@ class SettingsViewController: UIViewController {
     
     @objc private func pinyinChanged(_ sender: UISwitch) {
         UserDefaults.standard.set(sender.isOn, forKey: "showPinyin")
+    }
+    
+    @objc private func languageChanged(_ sender: UISegmentedControl) {
+        let useEnglish = sender.selectedSegmentIndex == 1
+        UserDefaults.standard.set(useEnglish, forKey: "useEnglish")
     }
     
     @objc private func closeTapped() {

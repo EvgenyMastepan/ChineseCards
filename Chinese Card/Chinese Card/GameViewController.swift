@@ -39,23 +39,40 @@ class GameViewController: UIViewController, GameViewProtocol {
     private func setupUI() {
         view.backgroundColor = .black
         
+        // StackView занимают основное пространство
         view.addSubview(leftStackView)
         view.addSubview(rightStackView)
-        view.addSubview(settingsButton)
+        
+        // Нижняя панель для кнопки
+        let bottomPanel = UIView()
+        bottomPanel.backgroundColor = .black
+        bottomPanel.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(bottomPanel)
+        
+        // Кнопка в нижней панели справа
+        bottomPanel.addSubview(settingsButton)
         
         NSLayoutConstraint.activate([
-            leftStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
+            // StackView сверху до нижней панели
             leftStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            leftStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            leftStackView.bottomAnchor.constraint(equalTo: bottomPanel.topAnchor, constant: -10),
+            leftStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 20),
             leftStackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.43),
             
-            rightStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             rightStackView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20),
-            rightStackView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20),
+            rightStackView.bottomAnchor.constraint(equalTo: bottomPanel.topAnchor, constant: -10),
+            rightStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
             rightStackView.widthAnchor.constraint(equalTo: view.widthAnchor, multiplier: 0.43),
             
-            settingsButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 10),
-            settingsButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -20),
+            // Нижняя панель
+            bottomPanel.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomPanel.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomPanel.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            bottomPanel.heightAnchor.constraint(equalToConstant: 50),
+            
+            // Кнопка в панели
+            settingsButton.centerYAnchor.constraint(equalTo: bottomPanel.centerYAnchor),
+            settingsButton.centerXAnchor.constraint(equalTo: bottomPanel.centerXAnchor),
             settingsButton.widthAnchor.constraint(equalToConstant: 50),
             settingsButton.heightAnchor.constraint(equalToConstant: 50)
         ])
@@ -125,11 +142,10 @@ class GameViewController: UIViewController, GameViewProtocol {
         
         for word in leftWords {
             let card = CustomCardView()
-            card.wordData = word  // ← ПЕРЕДАЁМ ВСЁ СЛОВО
-            card.showPinyin = UserDefaults.standard.bool(forKey: "showPinyin")
-            card.text = word.character
-            card.showPinyin = showPinyin
-            leftCards[word.id] = card  // сохраняем карточку
+            card.wordData = word  // ← передаём слово для пиньиня
+            card.showPinyin = showPinyin  // ← ОДИН раз!
+            // УБРАТЬ card.text = word.character - это делает wordData в updateDisplay()
+            leftCards[word.id] = card
             
             card.onTap = { [weak self] in
                 self?.presenter.didSelectWord(word, cardType: .character)

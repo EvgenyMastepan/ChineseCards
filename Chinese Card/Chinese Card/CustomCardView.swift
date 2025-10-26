@@ -11,7 +11,7 @@ import UIKit
 class CustomCardView: UIView {
     var onTap: (() -> Void)?
     
-    var showPinyin: Bool = false {
+    var showPinyin: Bool = true {
         didSet {
             updateDisplay()
         }
@@ -23,31 +23,33 @@ class CustomCardView: UIView {
         }
     }
     
+    var text: String? {
+        didSet {
+            label.text = text
+        }
+    }
+    
     private let label: UILabel = {
         $0.textColor = .white
         $0.textAlignment = .center
         $0.adjustsFontSizeToFitWidth = true
         $0.minimumScaleFactor = 0.5
         $0.lineBreakMode = .byWordWrapping
-        $0.font = UIFont.systemFont(ofSize: 24, weight: .medium)
-        $0.numberOfLines = 0
+        $0.font = UIFont.systemFont(ofSize: 20, weight: .semibold)
+        $0.numberOfLines = 2
         $0.translatesAutoresizingMaskIntoConstraints = false
         return $0
     }(UILabel())
     
     private let pinyinLabel: UILabel = {
-        $0.textColor = .systemGray
+        $0.textColor = .white
         $0.textAlignment = .center
-        $0.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        $0.font = UIFont.systemFont(ofSize: 12, weight: .light)
         $0.translatesAutoresizingMaskIntoConstraints = false
         return $0
     }(UILabel())
     
-    var text: String? {
-        didSet {
-            label.text = text
-        }
-    }
+
     
     init() {
         super.init(frame: .zero)
@@ -68,11 +70,26 @@ class CustomCardView: UIView {
         isUserInteractionEnabled = true
         
         addSubview(label)
+        addSubview(pinyinLabel)
         NSLayoutConstraint.activate([
-            label.centerXAnchor.constraint(equalTo: centerXAnchor),
             label.centerYAnchor.constraint(equalTo: centerYAnchor),
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10)
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            label.heightAnchor.constraint(equalToConstant: 26),
+            
+            pinyinLabel.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 4),
+            pinyinLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            pinyinLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+            pinyinLabel.heightAnchor.constraint(equalToConstant: 12),
+            
+//            pinyinLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),        // ← ВВЕРХУ
+//            pinyinLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+//            pinyinLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+//            
+//            label.topAnchor.constraint(equalTo: pinyinLabel.bottomAnchor, constant: 4), // ← ПОД пиньинем
+//            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+//            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
+//            label.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -8)
         ])
     }
     
@@ -97,6 +114,8 @@ class CustomCardView: UIView {
     }
     
     @objc private func handleTap() {
+        let feedback = UIImpactFeedbackGenerator(style: .light)
+        feedback.impactOccurred()
         onTap?()
     }
 }

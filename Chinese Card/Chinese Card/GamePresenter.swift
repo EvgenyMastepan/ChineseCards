@@ -66,7 +66,8 @@ class GamePresenter: GamePresenterProtocol {
                     id: word.id ?? UUID(),
                     character: word.character ?? "",
                     pinyin: word.pinyin ?? "",
-                    translation: word.translationEn ?? ""
+                    translationRu: word.translationRu ?? "",
+                    translationEn: word.translationEn ?? ""
                 )
             }
             

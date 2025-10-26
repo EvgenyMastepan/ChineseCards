@@ -16,6 +16,6 @@ struct WordData {
     
     // Вычисляемое свойство для текущего перевода
     var translation: String {
-        UserDefaults.standard.bool(forKey: "useEnglish") ? translationEn : translationRu
+        UserDefaults.standard.bool(forKey: Constants.useEnglishKey) ? translationEn : translationRu
     }
 }

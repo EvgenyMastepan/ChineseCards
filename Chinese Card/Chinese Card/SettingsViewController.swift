@@ -40,7 +40,7 @@ class SettingsViewController: UIViewController {
         
         // Пиньинь
         let pinyinSwitch = UISwitch()
-        pinyinSwitch.isOn = UserDefaults.standard.bool(forKey: "showPinyin")
+        pinyinSwitch.isOn = UserDefaults.standard.bool(forKey: Constants.showPinyinKey)
         pinyinSwitch.addTarget(self, action: #selector(pinyinChanged), for: .valueChanged)
         
         let pinyinLabel = UILabel()
@@ -54,7 +54,7 @@ class SettingsViewController: UIViewController {
         
         // Язык перевода
         let languageSegmented = UISegmentedControl(items: ["Русский", "English"])
-        languageSegmented.selectedSegmentIndex = UserDefaults.standard.bool(forKey: "useEnglish") ? 1 : 0
+        languageSegmented.selectedSegmentIndex = UserDefaults.standard.bool(forKey: Constants.useEnglishKey) ? 1 : 0
         languageSegmented.addTarget(self, action: #selector(languageChanged), for: .valueChanged)
         
         let languageLabel = UILabel()
@@ -97,12 +97,12 @@ class SettingsViewController: UIViewController {
     }
     
     @objc private func pinyinChanged(_ sender: UISwitch) {
-        UserDefaults.standard.set(sender.isOn, forKey: "showPinyin")
+        UserDefaults.standard.set(sender.isOn, forKey: Constants.showPinyinKey)
     }
     
     @objc private func languageChanged(_ sender: UISegmentedControl) {
         let useEnglish = sender.selectedSegmentIndex == 1
-        UserDefaults.standard.set(useEnglish, forKey: "useEnglish")
+        UserDefaults.standard.set(useEnglish, forKey: Constants.useEnglishKey)
     }
     
     @objc private func closeTapped() {

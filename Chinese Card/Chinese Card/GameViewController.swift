@@ -37,7 +37,7 @@ class GameViewController: UIViewController, GameViewProtocol {
     }
     
     private func setupUI() {
-        view.backgroundColor = .black
+        view.backgroundColor = Constants.backgroundColor
         
         // StackView занимают основное пространство
         view.addSubview(leftStackView)
@@ -45,7 +45,7 @@ class GameViewController: UIViewController, GameViewProtocol {
         
         // Нижняя панель для кнопки
         let bottomPanel = UIView()
-        bottomPanel.backgroundColor = .black
+        bottomPanel.backgroundColor = Constants.backgroundColor
         bottomPanel.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(bottomPanel)
         
@@ -79,14 +79,13 @@ class GameViewController: UIViewController, GameViewProtocol {
     }
     
     func highlightCard(wordData: WordData, cardType: CardType, isSelected: Bool) {
-        let stackView = cardType == .character ? leftStackView : rightStackView
+        let cardsDict = cardType == .character ? leftCards : rightCards
         
-        // Ищем карточку с нужным текстом
-        for case let card as CustomCardView in stackView.arrangedSubviews {
-            if card.text == (cardType == .character ? wordData.character : wordData.translation) {
-                card.setSelected(isSelected)
-                break
-            }
+        // Ищем карточку по ID слова - это надёжнее!
+        if let card = cardsDict[wordData.id] {
+            card.setSelected(isSelected)
+        } else {
+            print("⚠️ Карточка не найдена: \(wordData.character) \(wordData.id)")
         }
     }
     
@@ -138,31 +137,32 @@ class GameViewController: UIViewController, GameViewProtocol {
         leftStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         rightStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
-        let showPinyin = UserDefaults.standard.bool(forKey: "showPinyin")
+        let showPinyin = UserDefaults.standard.bool(forKey: Constants.showPinyinKey)
+        let useEnglish = UserDefaults.standard.bool(forKey: Constants.useEnglishKey)
         
+        // Левые карточки
         for word in leftWords {
             let card = CustomCardView()
-            card.wordData = word  // ← передаём слово для пиньиня
-            card.showPinyin = showPinyin  // ← ОДИН раз!
-            // УБРАТЬ card.text = word.character - это делает wordData в updateDisplay()
+            card.wordData = word
+            card.showPinyin = showPinyin
             leftCards[word.id] = card
             
             card.onTap = { [weak self] in
                 self?.presenter.didSelectWord(word, cardType: .character)
             }
-            
             leftStackView.addArrangedSubview(card)
         }
         
+        // Правые карточки
         for word in rightWords {
             let card = CustomCardView()
-            card.text = word.translation
-            rightCards[word.id] = card  // сохраняем карточку
+            // Устанавливаем перевод в зависимости от языка
+            card.text = useEnglish ? word.translationEn : word.translationRu
+            rightCards[word.id] = card
             
             card.onTap = { [weak self] in
                 self?.presenter.didSelectWord(word, cardType: .translation)
             }
-            
             rightStackView.addArrangedSubview(card)
         }
     }
@@ -184,9 +184,25 @@ class GameViewController: UIViewController, GameViewProtocol {
     }
     
     private func refreshPinyinDisplay() {
-        let showPinyin = UserDefaults.standard.bool(forKey: "showPinyin")
+        let showPinyin = UserDefaults.standard.bool(forKey: Constants.showPinyinKey)
+        let useEnglish = UserDefaults.standard.bool(forKey: Constants.useEnglishKey)
         
-        // Обновляем все карточки с иероглифами
-        presenter.startGame()
+        // Обновляем ВСЕ карточки без перезапуска игры
+        
+        // Левые карточки (иероглифы) - обновляем пиньинь
+        for (wordId, card) in leftCards {
+            if let wordData = leftColumnWords.first(where: { $0.id == wordId }) {
+                card.wordData = wordData
+                card.showPinyin = showPinyin
+            }
+        }
+        
+        // Правые карточки (переводы) - обновляем язык
+        for (wordId, card) in rightCards {
+            if let wordData = rightColumnWords.first(where: { $0.id == wordId }) {
+                // Обновляем текст перевода
+                card.text = useEnglish ? wordData.translationEn : wordData.translationRu
+            }
+        }
     }
 }

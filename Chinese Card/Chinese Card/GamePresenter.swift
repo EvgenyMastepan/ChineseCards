@@ -31,7 +31,7 @@ class GamePresenter: GamePresenterProtocol {
     }
     
     private func loadWordsForGame() {
-        let context = CoreManager().persistentContainer.viewContext
+        let context = CoreManager.shared.persistentContainer.viewContext
         let request: NSFetchRequest<Word> = Word.fetchRequest()
         request.predicate = NSPredicate(format: "hskLevel == 1")
         
@@ -45,16 +45,16 @@ class GamePresenter: GamePresenterProtocol {
             }
             
             // Если мало доступных - очищаем историю
-            let wordsToUse = availableWords.count >= 8 ? availableWords : allWords
+            let wordsToUse = availableWords.count >= Constants.cardCount ? availableWords : allWords
             
-            let selectedWords = Array(wordsToUse.shuffled().prefix(8))
+            let selectedWords = Array(wordsToUse.shuffled().prefix(Constants.cardCount))
             
             // Обновляем историю
             selectedWords.forEach { word in
                 if let id = word.id {
                     stats.usedWordIds.insert(id)
                     // Ограничиваем размер истории
-                    if stats.usedWordIds.count > maxRecentWords {
+                    if stats.usedWordIds.count > Constants.maxRecentWords {
                         stats.usedWordIds.removeFirst()
                     }
                 }

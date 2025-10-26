@@ -9,7 +9,7 @@ import CoreData
 
 class DataSeeder {
     static func seedInitialData() {
-        let context = CoreManager().persistentContainer.viewContext
+        let context = CoreManager.shared.persistentContainer.viewContext
         
         // Проверяем есть ли уже данные
         let request: NSFetchRequest<Word> = Word.fetchRequest()

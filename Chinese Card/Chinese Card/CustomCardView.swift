@@ -61,8 +61,8 @@ class CustomCardView: UIView {
     }
     
     private func setupView() {
-        backgroundColor = .systemBlue
-        layer.cornerRadius = 12
+        backgroundColor = Constants.cardColor
+        layer.cornerRadius = Constants.cardCornerRadius
         translatesAutoresizingMaskIntoConstraints = false
         
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap))
@@ -73,33 +73,24 @@ class CustomCardView: UIView {
         addSubview(pinyinLabel)
         NSLayoutConstraint.activate([
             label.centerYAnchor.constraint(equalTo: centerYAnchor),
-            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            label.heightAnchor.constraint(equalToConstant: 26),
+            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.cardContentPadding),
+            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.cardContentPadding),
+            label.heightAnchor.constraint(equalToConstant: Constants.cardLabelHeight),
             
             pinyinLabel.topAnchor.constraint(equalTo: label.bottomAnchor, constant: 4),
-            pinyinLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-            pinyinLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-            pinyinLabel.heightAnchor.constraint(equalToConstant: 12),
-            
-//            pinyinLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),        // ← ВВЕРХУ
-//            pinyinLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-//            pinyinLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-//            
-//            label.topAnchor.constraint(equalTo: pinyinLabel.bottomAnchor, constant: 4), // ← ПОД пиньинем
-//            label.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
-//            label.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
-//            label.bottomAnchor.constraint(lessThanOrEqualTo: bottomAnchor, constant: -8)
+            pinyinLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: Constants.cardContentPadding),
+            pinyinLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -Constants.cardContentPadding),
+            pinyinLabel.heightAnchor.constraint(equalToConstant: Constants.pinyinLabelHeight),
         ])
     }
     
     func setSelected(_ isSelected: Bool) {
-        UIView.animate(withDuration: 0.2) {
+        UIView.animate(withDuration: Constants.animationDuration) {
             if isSelected {
-                self.backgroundColor = .systemGreen
-                self.transform = CGAffineTransform(scaleX: 1.05, y: 1.05)
+                self.backgroundColor = Constants.selectedColor
+                self.transform = CGAffineTransform(scaleX: Constants.cardScaleFactor, y: Constants.cardScaleFactor)
             } else {
-                self.backgroundColor = .systemBlue  // ВОЗВРАЩАЕМ СИНИЙ
+                self.backgroundColor = Constants.cardColor
                 self.transform = .identity
             }
         }

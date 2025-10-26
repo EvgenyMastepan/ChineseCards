@@ -6,8 +6,8 @@
 //
 //
 
-public import Foundation
-public import CoreData
+import Foundation
+import CoreData
 
 public typealias WordCoreDataClassSet = NSSet
 
@@ -24,7 +24,7 @@ extension Word {
         return NSFetchRequest<Word>(entityName: "Word")
     }
 
-    @NSManaged public var charackter: String?
+    @NSManaged public var character: String?
     @NSManaged public var pinyin: String?
     @NSManaged public var translationRu: String?
     @NSManaged public var translationEn: String?

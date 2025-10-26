@@ -12,7 +12,7 @@ import CoreData
 class CoreManager {
     lazy var persistentContainer: NSPersistentContainer = {
 
-        let container = NSPersistentContainer(name: "Chinese_Card")
+        let container = NSPersistentContainer(name: "ChineseCard")
         container.loadPersistentStores(completionHandler: { (storeDescription, error) in
             if let error = error as NSError? {
 

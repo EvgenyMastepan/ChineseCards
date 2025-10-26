@@ -9,6 +9,7 @@ import UIKit
 
 class Builder {
     static func createGameModule() -> UIViewController {
+        print("🟡 Builder создаёт модуль")
         let view = GameViewController()
         let presenter = GamePresenter()
         

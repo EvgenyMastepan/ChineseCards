@@ -34,7 +34,7 @@ class DataSeeder {
         
         for (character, pinyin, ru, en, level) in words {
             let word = Word(context: context)
-            word.charackter = character
+            word.character = character
             word.pinyin = pinyin
             word.translationRu = ru
             word.translationEn = en

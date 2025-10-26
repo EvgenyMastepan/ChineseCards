@@ -7,5 +7,5 @@
 
 protocol GamePresenterProtocol {
     func startGame()
-    func didSelectWord(_ word: Word)
+    func didSelectWord(_ wordData: WordData, cardType: CardType)
 }

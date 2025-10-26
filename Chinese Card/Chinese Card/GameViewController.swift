@@ -99,12 +99,7 @@ class GameViewController: UIViewController, GameViewProtocol {
         let cardsDict = cardType == .character ? leftCards : rightCards
         
         if let card = cardsDict[wordData.id] {
-            UIView.animate(withDuration: 0.3, animations: {
-                card.alpha = 0
-                card.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
-            }) { _ in
-                card.isHidden = true
-            }
+            card.animateMatch() // ← используем новую анимацию
         }
     }
 
@@ -118,16 +113,8 @@ class GameViewController: UIViewController, GameViewProtocol {
     private func animateMismatch(wordData: WordData, cardType: CardType) {
         let cardsDict = cardType == .character ? leftCards : rightCards
         
-        // Находим карточку по ID слова - ТОЧНО!
         if let card = cardsDict[wordData.id] {
-            UIView.animate(withDuration: 0.1, animations: {
-                card.backgroundColor = .systemRed
-            }) { _ in
-                UIView.animate(withDuration: 0.1) {
-                    card.backgroundColor = .systemBlue
-                    card.setSelected(false)
-                }
-            }
+            card.animateMismatch() // ← используем новую анимацию
         }
     }
     
@@ -140,8 +127,8 @@ class GameViewController: UIViewController, GameViewProtocol {
         let showPinyin = UserDefaults.standard.bool(forKey: Constants.showPinyinKey)
         let useEnglish = UserDefaults.standard.bool(forKey: Constants.useEnglishKey)
         
-        // Левые карточки
-        for word in leftWords {
+        // Левые карточки с задержкой для последовательного появления
+        for (index, word) in leftWords.enumerated() {
             let card = CustomCardView()
             card.wordData = word
             card.showPinyin = showPinyin
@@ -150,20 +137,23 @@ class GameViewController: UIViewController, GameViewProtocol {
             card.onTap = { [weak self] in
                 self?.presenter.didSelectWord(word, cardType: .character)
             }
+            
             leftStackView.addArrangedSubview(card)
+            card.animateAppear(delay: Double(index) * 0.05) // ← анимация появления
         }
         
-        // Правые карточки
-        for word in rightWords {
+        // Правые карточки с задержкой
+        for (index, word) in rightWords.enumerated() {
             let card = CustomCardView()
-            // Устанавливаем перевод в зависимости от языка
             card.text = useEnglish ? word.translationEn : word.translationRu
             rightCards[word.id] = card
             
             card.onTap = { [weak self] in
                 self?.presenter.didSelectWord(word, cardType: .translation)
             }
+            
             rightStackView.addArrangedSubview(card)
+            card.animateAppear(delay: Double(index) * 0.05 + 0.2) // ← чуть позже левых
         }
     }
     

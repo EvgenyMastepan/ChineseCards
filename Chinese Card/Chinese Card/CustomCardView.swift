@@ -49,7 +49,6 @@ class CustomCardView: UIView {
         return $0
     }(UILabel())
     
-
     
     init() {
         super.init(frame: .zero)
@@ -85,13 +84,18 @@ class CustomCardView: UIView {
     }
     
     func setSelected(_ isSelected: Bool) {
-        UIView.animate(withDuration: Constants.animationDuration) {
+        UIView.animate(withDuration: 0.15, delay: 0, options: [.curveEaseOut]) {
             if isSelected {
                 self.backgroundColor = Constants.selectedColor
-                self.transform = CGAffineTransform(scaleX: Constants.cardScaleFactor, y: Constants.cardScaleFactor)
+                self.transform = CGAffineTransform(scaleX: 1.08, y: 1.08)
+                self.layer.shadowColor = UIColor.systemGreen.cgColor
+                self.layer.shadowOpacity = 0.6
+                self.layer.shadowOffset = CGSize(width: 0, height: 4)
+                self.layer.shadowRadius = 8
             } else {
                 self.backgroundColor = Constants.cardColor
                 self.transform = .identity
+                self.layer.shadowOpacity = 0
             }
         }
     }
@@ -103,6 +107,55 @@ class CustomCardView: UIView {
         pinyinLabel.text = showPinyin ? wordData.pinyin : ""
         pinyinLabel.isHidden = !showPinyin
     }
+    
+    func animateMatch() {
+         UIView.animate(withDuration: 0.2, animations: {
+             self.transform = CGAffineTransform(scaleX: 1.1, y: 1.1)
+             self.alpha = 0.7
+         }) { _ in
+             UIView.animate(withDuration: 0.15, animations: {
+                 self.transform = CGAffineTransform(scaleX: 0.1, y: 0.1)
+                 self.alpha = 0
+             }) { _ in
+                 self.isHidden = true
+             }
+         }
+     }
+     
+     // Улучшенная анимация несовпадения
+     func animateMismatch() {
+         UIView.animateKeyframes(withDuration: 0.4, delay: 0, options: []) {
+             // 1. Сдвиг вправо
+             UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.25) {
+                 self.transform = CGAffineTransform(translationX: 8, y: 0)
+                 self.backgroundColor = Constants.mismatchColor
+             }
+             // 2. Сдвиг влево
+             UIView.addKeyframe(withRelativeStartTime: 0.25, relativeDuration: 0.25) {
+                 self.transform = CGAffineTransform(translationX: -8, y: 0)
+             }
+             // 3. Возврат на место
+             UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.25) {
+                 self.transform = CGAffineTransform(translationX: 4, y: 0)
+             }
+             // 4. Возврат цвета
+             UIView.addKeyframe(withRelativeStartTime: 0.75, relativeDuration: 0.25) {
+                 self.transform = .identity
+                 self.backgroundColor = Constants.cardColor
+             }
+         }
+     }
+     
+     // Анимация появления новой карточки
+     func animateAppear(delay: TimeInterval = 0) {
+         self.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
+         self.alpha = 0
+         
+         UIView.animate(withDuration: 0.3, delay: delay, usingSpringWithDamping: 0.6, initialSpringVelocity: 0.5, options: []) {
+             self.transform = .identity
+             self.alpha = 1
+         }
+     }
     
     @objc private func handleTap() {
         let feedback = UIImpactFeedbackGenerator(style: .light)

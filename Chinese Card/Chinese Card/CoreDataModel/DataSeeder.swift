@@ -11,13 +11,14 @@ class DataSeeder {
     static func seedInitialData() {
         let context = CoreManager.shared.persistentContainer.viewContext
         
-        // Проверяем есть ли уже данные
+// MARK: -- Проверка наличия данных
+        
         let request: NSFetchRequest<Word> = Word.fetchRequest()
         if let count = try? context.count(for: request), count > 0 {
             return // Данные уже есть
         }
         
-        // Добавляем тестовые слова HSK1
+//MARK: -- Первичные данные
         let words = [
             ("爱", "ài", "любовь", "love", 1),
             ("八", "bā", "восемь", "eight", 1),

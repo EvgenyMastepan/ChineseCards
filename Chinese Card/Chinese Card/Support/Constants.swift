@@ -17,6 +17,18 @@ enum Constants {
     static let animationDuration = 0.3
     static let mismatchAnimationDuration = 0.1
     static let cardScaleFactor: CGFloat = 1.05
+    static let selectionDuration: Double = 0.15
+    static let matchDuration: Double = 0.2
+    static let mismatchDuration: Double = 0.4
+    static let appearDuration: Double = 0.3
+    static let cardScaleSelected: CGFloat = 1.08
+    static let cardScaleMatch: CGFloat = 1.1
+    static let cardScaleDisappear: CGFloat = 0.1
+    
+    // MARK: - Тени
+    static let shadowOpacitySelected: Float = 0.6
+    static let shadowOffsetSelected = CGSize(width: 0, height: 4)
+    static let shadowRadiusSelected: CGFloat = 8
     
     // MARK: - Layout
     static let stackViewSpacing: CGFloat = 10

@@ -14,7 +14,7 @@ struct WordData {
     let translationRu: String
     let translationEn: String
     
-    // Вычисляемое свойство для текущего перевода
+// MARK: -- Вычисляемое свойство для языка перевода.
     var translation: String {
         UserDefaults.standard.bool(forKey: Constants.useEnglishKey) ? translationEn : translationRu
     }

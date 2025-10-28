@@ -7,6 +7,8 @@
 
 import UIKit
 
+// MARK: -- Туть хранить все константы из программы. Прям как взрослый, да.
+
 enum Constants {
     
     // MARK: - Game Settings

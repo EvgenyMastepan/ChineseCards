@@ -122,23 +122,20 @@ class CustomCardView: UIView {
          }
      }
      
-     // Улучшенная анимация несовпадения
+// MARK: -- Анимация несовпадения
      func animateMismatch() {
          UIView.animateKeyframes(withDuration: 0.4, delay: 0, options: []) {
-             // 1. Сдвиг вправо
+
              UIView.addKeyframe(withRelativeStartTime: 0, relativeDuration: 0.25) {
                  self.transform = CGAffineTransform(translationX: 8, y: 0)
                  self.backgroundColor = Constants.mismatchColor
              }
-             // 2. Сдвиг влево
              UIView.addKeyframe(withRelativeStartTime: 0.25, relativeDuration: 0.25) {
                  self.transform = CGAffineTransform(translationX: -8, y: 0)
              }
-             // 3. Возврат на место
              UIView.addKeyframe(withRelativeStartTime: 0.5, relativeDuration: 0.25) {
                  self.transform = CGAffineTransform(translationX: 4, y: 0)
              }
-             // 4. Возврат цвета
              UIView.addKeyframe(withRelativeStartTime: 0.75, relativeDuration: 0.25) {
                  self.transform = .identity
                  self.backgroundColor = Constants.cardColor
@@ -146,7 +143,7 @@ class CustomCardView: UIView {
          }
      }
      
-     // Анимация появления новой карточки
+// MARK: -- Анимация новых карточек
      func animateAppear(delay: TimeInterval = 0) {
          self.transform = CGAffineTransform(scaleX: 0.8, y: 0.8)
          self.alpha = 0

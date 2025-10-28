@@ -8,6 +8,8 @@
 import Foundation
 import CoreData
 
+// MARK: -- Тут презентер. Тут вся логика. Вся магия тут.
+
 class GamePresenter: GamePresenterProtocol {
     weak var view: GameViewProtocol?
     private var currentWords: [WordData] = []
@@ -60,7 +62,7 @@ class GamePresenter: GamePresenterProtocol {
                 }
             }
             
-            // Конвертируем в WordData
+            // Конвертируем в WordData. Потому что надо.
             currentWords = selectedWords.map { word in
                 WordData(
                     id: word.id ?? UUID(),

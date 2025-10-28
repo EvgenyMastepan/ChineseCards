@@ -7,6 +7,8 @@
 
 import CoreData
 
+
+// MARK: -- Грузим в CoreData какую-нибудь дичь.
 class DataSeeder {
     static func seedInitialData() {
         let context = CoreManager.shared.persistentContainer.viewContext
@@ -18,7 +20,7 @@ class DataSeeder {
             return // Данные уже есть
         }
         
-//MARK: -- Первичные данные
+//MARK: -- Первичные данные. Пока так грузим. Возможно с сайта буду потом.
         let words = [
             ("爱", "ài", "любовь", "love", 1),
             ("八", "bā", "восемь", "eight", 1),

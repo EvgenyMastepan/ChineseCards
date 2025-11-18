@@ -122,8 +122,8 @@ class GameViewController: UIViewController, GameViewProtocol {
         leftStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         rightStackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
         
-        let showPinyin = UserDefaults.standard.bool(forKey: "showPinyin")
-        let useEnglish = UserDefaults.standard.bool(forKey: "useEnglish")
+        let showPinyin = UserDefaults.standard.bool(forKey: Constants.showPinyinKey)
+        let useEnglish = UserDefaults.standard.bool(forKey: Constants.useEnglishKey)
         
         // Левые карточки с задержкой для последовательного появления
         for (index, word) in leftWords.enumerated() {
